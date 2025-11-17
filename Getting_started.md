@@ -42,7 +42,7 @@ Before you begin, ensure you have the following installed:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/e-tendering-platform.git
+git clone https://github.com/pakistanimoon/e-tendering.git
 cd e-tendering-platform
 ```
 
@@ -119,7 +119,7 @@ Login → Dashboard → "Create New Project"
 ```
 
 Fill in:
-- Project title (e.g., "Website Development 2024")
+- Project title (e.g., "Website Development With Deployment")
 - Description
 - Deadline
 - Budget range
@@ -552,6 +552,6 @@ docker-compose down -v
 
 - 📧 Email: support@example.com
 - 💬 Discord: [Join our community]
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/e-tendering-platform/issues)
+- 🐛 Issues: [GitHub Issues](https://github.com/pakistanimoon/e-tendering/issues)
 
 Happy coding! 🚀

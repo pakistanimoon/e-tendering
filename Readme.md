@@ -45,7 +45,7 @@ An AI-powered electronic tendering and procurement platform that automates bid e
                               ▼
                         ┌──────────────┐
                         │  AI Worker   │
-                        │   (Claude)   │
+                        │              │
                         └──────────────┘
 ```
 
