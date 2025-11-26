@@ -125,3 +125,5 @@ volumes:
 networks:
   default:
     name: etendering_network
+environment:
+  - PYTHONDONTWRITEBYTECODE=1

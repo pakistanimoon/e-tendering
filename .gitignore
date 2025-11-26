@@ -1,0 +1,8 @@
+#Environment
+.env
+.env.example
+.env.backup
+
+# Python
+__pycache__/
+*.pyc
