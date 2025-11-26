@@ -56,7 +56,7 @@ print_info "✓ Docker Compose found: $(docker-compose --version)"
 if [ ! -f .env ]; then
     print_warning ".env file not found. Creating from template..."
     
-    cat > .env << 'EOF'
+cat > .env << 'EOF'
 # Database Configuration
 DATABASE_URL=postgresql://etendering:dev_password_123@postgres:5432/etendering_db
 
@@ -249,3 +249,4 @@ echo ""
 print_info "Setup complete! 🚀"
 print_info "Check the documentation in README.md for more information"
 echo ""
+sleep 10

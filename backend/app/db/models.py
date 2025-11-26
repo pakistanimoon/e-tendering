@@ -122,7 +122,7 @@ class Document(Base):
     
     # Extracted content and metadata
     extracted_text = Column(Text)
-    metadata = Column(JSON, default={})
+    document_metadata = Column(JSON, default={})
     
     uploaded_at = Column(DateTime, default=datetime.utcnow)
     

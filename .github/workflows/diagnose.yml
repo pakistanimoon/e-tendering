@@ -1,0 +1,80 @@
+name: Repo Diagnostics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Create diagnostics dir
+        run: mkdir -p diagnostics
+
+      - name: Node: install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci > diagnostics/npm_install.txt 2>&1 || true
+          else
+            echo "no package.json" > diagnostics/npm_install.txt
+          fi
+
+      - name: Node: build & tests & lint & tsc
+        run: |
+          if [ -f package.json ]; then
+            npm run build > diagnostics/npm_build.txt 2>&1 || true
+            npm test > diagnostics/npm_test.txt 2>&1 || true
+            npx tsc --noEmit > diagnostics/tsc.txt 2>&1 || true
+            npx eslint . --ext .ts,.tsx > diagnostics/eslint.txt 2>&1 || true
+            npm audit --json > diagnostics/npm_audit.json 2>&1 || true
+          else
+            echo "no package.json" > diagnostics/npm_build.txt
+          fi
+
+      - name: Python: install deps
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt > diagnostics/pip_install.txt 2>&1 || true
+          elif [ -f pyproject.toml ]; then
+            pip install . > diagnostics/pip_install.txt 2>&1 || true
+          else
+            echo "no requirements.txt or pyproject.toml" > diagnostics/pip_install.txt
+          fi
+
+      - name: Python: tests & linters & mypy
+        run: |
+          pytest -q > diagnostics/pytest.txt 2>&1 || true
+          mypy . > diagnostics/mypy.txt 2>&1 || true
+          flake8 . > diagnostics/flake8.txt 2>&1 || true
+          pip-audit --format=json > diagnostics/pip_audit.json 2>&1 || true
+
+      - name: Docker build (optional)
+        run: |
+          if [ -f Dockerfile ]; then
+            docker build -t repo-diagnostic:latest . > diagnostics/docker_build.txt 2>&1 || true
+          else
+            echo "no Dockerfile" > diagnostics/docker_build.txt
+          fi
+
+      - name: Search for TODO/FIXME and secrets
+        run: |
+          grep -RIn --exclude-dir=.git --exclude=diagnostics "TODO\|FIXME" . > diagnostics/todos.txt || true
+          git grep -nE "AKIA|BEGIN RSA PRIVATE KEY|PRIVATE_KEY|SECRET" > diagnostics/possible_secrets.txt || true
+
+      - name: Upload diagnostics artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostics
+          path: diagnostics
